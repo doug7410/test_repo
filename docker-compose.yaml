@@ -1,0 +1,73 @@
+version: "2"
+services:
+  drug_scraper_puppeteer:
+    container_name: drug_scraper_puppeteer-local
+    build:
+      context: ./docker/puppeteer
+    volumes:
+      - ./:/var/www/
+    working_dir: /var/www/
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    tty: true
+    expose:
+      - 3000
+
+#  drug_scraper_node:
+#    container_name: drug_scraper_node-local
+#    build:
+#      context: ./docker/node
+#    volumes:
+#      - ./:/var/www/html/drug_scraper
+#    working_dir: /var/www/html/drug_scraper
+#    depends_on:
+#      - mysql
+#    links:
+#      - mysql
+#    tty: true
+#    ports:
+#      - "8888:8080"
+
+  ###############################################################################
+  # Drug Scraper: PHP App
+  ###############################################################################
+  drug_scraper:
+    container_name: drug_scraper_laravel-local
+    build:
+      context: .
+      dockerfile: DockerfileLocal
+    volumes:
+      - ./:/var/www/html/drug_scraper
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    expose:
+      - 9515
+
+  ###############################################################################
+  # Drug Scraper: MySql
+  ###############################################################################
+  mysql:
+    container_name: drug_scraper_mysql-local
+    image: mysql:5.6
+    user: "mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=scraper
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/blink_pricing.sql:/docker-entrypoint-initdb.d/blink_pricing.sql
+      - ./docker/mysql/drug_pull_blink.sql:/docker-entrypoint-initdb.d/drug_pull_blink.sql
+      - ./docker/mysql/drug_pull_goodrx.sql:/docker-entrypoint-initdb.d/drug_pull_goodrx.sql
+      - ./docker/mysql/drug_pull_singlecare.sql:/docker-entrypoint-initdb.d/drug_pull_singlecare.sql
+      - ./docker/mysql/drug_pull_unarx.sql:/docker-entrypoint-initdb.d/drug_pull_unarx.sql
+      - ./docker/mysql/drug_pull_wellrx.sql:/docker-entrypoint-initdb.d/drug_pull_wellrx.sql
+      - ./docker/mysql/goodrx_mar_08.sql:/docker-entrypoint-initdb.d/goodrx_mar_08.sql
+      - ./docker/mysql/singlecare_staging.sql:/docker-entrypoint-initdb.d/singlecare_staging.sql
+      - ./docker/mysql/unarx_staging.sql:/docker-entrypoint-initdb.d/unarx_staging.sql
+      - ./docker/mysql/wellrx_api_staging.sql:/docker-entrypoint-initdb.d/wellrx_api_staging.sql

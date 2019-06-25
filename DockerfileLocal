@@ -1,0 +1,51 @@
+FROM pdcgs/ubuntu-php-7.3:latest
+
+WORKDIR /var/www/html/drug_scraper
+
+CMD "/docker/entrypoint.sh"
+
+# DOCKER FILES
+COPY ./docker/*.sh /docker/
+
+# CONFD FILES
+COPY ./confd /etc/confd
+
+# SUPERVISOR
+COPY ./docker/*.conf /etc/supervisor/conf.d/
+
+# APP FILES
+COPY . /var/www/html/drug_scraper
+
+# BUILD
+RUN /docker/build.sh
+
+RUN apt-get update
+
+# For development
+RUN apt-get install git -y
+
+# For Laravel
+RUN apt-get install php-mbstring -y && \
+    apt-get install php-xml -y && \
+    apt-get install php7.3-zip -y  && \
+    apt-get install php7.3-curl
+
+# PHP mySql
+RUN apt-get install php-mysql -y
+
+# For Symfony Panther (web scraping library)
+#RUN apt-get install -y libzip-dev zlib1g-dev unzip
+#RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add && \
+#    echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+#    apt-get -y update && \
+#    apt-get -y install google-chrome-stable
+#RUN wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip && \
+#    unzip chromedriver_linux64.zip && \
+#    rm chromedriver_linux64.zip
+#RUN mv chromedriver /usr/bin/chromedriver && \
+#    chown root:root /usr/bin/chromedriver && \
+#    chmod +x /usr/bin/chromedriver
+#
+#ENV PANTHER_NO_SANDBOX 1
+#ENV PANTHER_CHROME_DRIVER_BINARY /usr/bin/chromedriver
+#

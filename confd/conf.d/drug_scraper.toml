@@ -1,0 +1,8 @@
+[template]
+src = "drug_scraper.tmpl"
+dest = "/var/www/html/drug_scraper/.env"
+prefix = "/drug_scraper/"
+keys = [
+    "/",
+		"core/"
+]
