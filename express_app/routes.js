@@ -1,10 +1,9 @@
 const controllers =  require('./controllers')
-console.log('from routes.js', controllers)
 
 const registerRoutes = (app) => {
-  app.get('/goodRx/drugId', (req, res) => controllers.GoodRx.id(req, res))
-
-  app.get('/coupon', (req, res) => controllers.GoodRx.couponPage(req, res))
+  app.post('/goodRx/scrapeDrugId', (req, res) => controllers.GoodRx.scrapeDrugId(req, res))
+  app.post('/goodRx/scrapeApi', (req, res) => controllers.GoodRx.scrapeApi(req, res))
+  app.post('/goodRx/scrapeCoupon', (req, res) => controllers.GoodRx.scrapeCouponPage(req, res))
 }
 
 module.exports = registerRoutes

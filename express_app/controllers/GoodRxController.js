@@ -1,52 +1,63 @@
-const GoodRx = require('../GoodRx/GetId')
+const ScrapeGoodRxDrugID = require('../GoodRx/ScrapeDrugID')
+const ScrapeGoodRxApi = require('../GoodRx/ScrapeApi')
+const ScrapeCoupon = require('../GoodRx/ScrapeCoupon')
+
 module.exports = {
-  async id(req, res) {
-
-    const drugFromDB =
-      {
-        "POTENTIS_GSN": "020241",
-        "GCN": "02318",
-        "GSN": "20241",
-        "GCN2": "2318",
-        "DrugName": "ACARBOSE 100 MG TABLET",
-        "DrugBrandGenericFlag": "1",
-        "DrugNDC": "64380076006",
-        "NDC": "64380076006",
-        "goodrx_name": "Acarbose",
-        "goodrx_form": "tablet",
-        "goodrx_dosage": "100mg",
-        "goodrx_qty": "90",
-        "potentis_form": "TABLET",
-        "potentis_dosage": "100 MG",
-        "potentis_qty": 90,
-        "api_name": "acarbose",
-        "api_form": "tablet",
-        "api_dosage": "100mg",
-        "api_qty": "90",
-        "unavailable": null,
-        "_px2": null,
-        "_ga": null,
-        "fastly_unique_id": null
-      }
-
-
+  async scrapeDrugId(req, res) {
     res.setHeader('Content-Type', 'application/json');
     try {
-      console.log('calling scrapeDrug()')
-      const response = await GoodRx.scrapeDrugId(drugFromDB)
+      const response = await ScrapeGoodRxDrugID(req.body)
+
       if (!response.error) {
         res.send(JSON.stringify(response))
       } else {
-        res.send({ error: JSON.stringify(response.error)})
+        res.send({error: JSON.stringify(response.error)})
       }
     } catch (error) {
       res.send(JSON.stringify({error}))
     }
-
-
   },
 
-  couponPage(req, res) {
-    res.send('GoodRX Coupon' + "\r\n")
+  async scrapeApi(req, res) {
+    const {
+      drugId,
+      zipcode,
+    } = req.body
+
+    const drugFromDb = {
+        goodrx_name: req.body.goodrx_name,
+        goodrx_form: req.body.goodrx_form,
+        goodrx_dosage: req.body.goodrx_dosage,
+        goodrx_qty: req.body.goodrx_qty,
+        DrugName: req.body.DrugName,
+        GCN2: req.body.GCN2,
+        GCN: req.body.GCN,
+        potentis_qty: req.body.potentis_qty,
+        potentis_form: req.body.potentis_form,
+        potentis_dosage: req.body.potentis_dosage,
+        POTENTIS_GSN: req.body.POTENTIS_GSN,
+        GSN: req.body.GSN,
+        DrugNDC: req.body.DrugNDC,
+        NDC: req.body.NDC,
+        DrugBrandGenericFlag: req.body.DrugBrandGenericFlag,
+    }
+
+    try {
+      const response = await ScrapeGoodRxApi(drugId, zipcode, drugFromDb)
+      res.send(response)
+
+    } catch (e) {
+      res.send(e)
+    }
+  },
+
+  async scrapeCouponPage(req, res) {
+
+    try {
+      const response = await ScrapeCoupon(req.body.couponUrl)
+      res.send(response)
+    } catch (e) {
+      res.send(e)
+    }
   }
 }

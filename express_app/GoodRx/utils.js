@@ -1,8 +1,7 @@
-const fs = require('fs');
 const writeHtmlToFile = require('../utils/WriteHtmlToFile')
 
 module.exports = {
-  checkIfPageIsBlocked: async (page, browser) => {
+  checkIfPageIsBlocked: async (page) => {
     const body = await page.evaluate(() => document.querySelector('body').textContent);
     const blockedText = [
       'Access to this page has been denied because we believe you are using automation tools to browse the website',
@@ -10,12 +9,12 @@ module.exports = {
     ]
 
     if (body.includes(blockedText[0])) {
-      await writeHtmlToFile(page, __dirname+'/blocked_for_automation.html')
+      await writeHtmlToFile(page, __dirname+'/storage/blocked_for_automation.html')
       return `Blocked: ${blockedText[0]}`
     }
 
     if (body.includes(blockedText[1])) {
-      await writeHtmlToFile(page, __dirname+'/blocked_for_out_of_us.html')
+      await writeHtmlToFile(page, __dirname+'/storage/blocked_for_out_of_us.html')
       return `Blocked: ${blockedText[1]}`
     }
 
@@ -36,15 +35,4 @@ module.exports = {
       `quantity=${drug.goodrx_qty}`;
   },
 
-  async writeHtmlToFile(page, file) {
-    const pageHtml = await page.evaluate(() => document.querySelector('html').outerHTML);
-
-    fs.writeFile(file, pageHtml, function (err) {
-      if (err) {
-        return console.log(err);
-      }
-
-      console.log(`${file} was saved`)
-    });
-  }
 }

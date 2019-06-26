@@ -14,6 +14,8 @@ services:
     tty: true
     expose:
       - 3000
+    ports:
+      - "3000:3000"
 
 #  drug_scraper_node:
 #    container_name: drug_scraper_node-local
