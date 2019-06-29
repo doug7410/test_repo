@@ -15,7 +15,153 @@ services:
     expose:
       - 3000
     ports:
-      - "3000:3000"
+      - 3333:3000
+    command: node express_app/server.js
+
+
+  drug_scraper_puppeteer_2:
+      container_name: drug_scraper_puppeteer-local-2
+      build:
+        context: ./docker/puppeteer
+      volumes:
+        - ./:/var/www/
+      working_dir: /var/www/
+      depends_on:
+        - mysql
+      links:
+        - mysql
+      tty: true
+      expose:
+        - 3000
+      command: node express_app/server.js
+
+#  drug_scraper_puppeteer_3:
+#      container_name: drug_scraper_puppeteer-local-3
+#      build:
+#        context: ./docker/puppeteer
+#      volumes:
+#        - ./:/var/www/
+#      working_dir: /var/www/
+#      depends_on:
+#        - mysql
+#      links:
+#        - mysql
+#      tty: true
+#      expose:
+#        - 3000
+#      command: node express_app/server.js
+#
+#  drug_scraper_puppeteer_4:
+#      container_name: drug_scraper_puppeteer-local-4
+#      build:
+#        context: ./docker/puppeteer
+#      volumes:
+#        - ./:/var/www/
+#      working_dir: /var/www/
+#      depends_on:
+#        - mysql
+#      links:
+#        - mysql
+#      tty: true
+#      expose:
+#        - 3000
+#      command: node express_app/server.js
+#
+#  drug_scraper_puppeteer_5:
+#      container_name: drug_scraper_puppeteer-local-5
+#      build:
+#        context: ./docker/puppeteer
+#      volumes:
+#        - ./:/var/www/
+#      working_dir: /var/www/
+#      depends_on:
+#        - mysql
+#      links:
+#        - mysql
+#      tty: true
+#      expose:
+#        - 3000
+#      command: node express_app/server.js
+#
+#  drug_scraper_puppeteer_6:
+#      container_name: drug_scraper_puppeteer-local-6
+#      build:
+#        context: ./docker/puppeteer
+#      volumes:
+#        - ./:/var/www/
+#      working_dir: /var/www/
+#      depends_on:
+#        - mysql
+#      links:
+#        - mysql
+#      tty: true
+#      expose:
+#        - 3000
+#      command: node express_app/server.js
+#
+#  drug_scraper_puppeteer_7:
+#      container_name: drug_scraper_puppeteer-local-7
+#      build:
+#        context: ./docker/puppeteer
+#      volumes:
+#        - ./:/var/www/
+#      working_dir: /var/www/
+#      depends_on:
+#        - mysql
+#      links:
+#        - mysql
+#      tty: true
+#      expose:
+#        - 3000
+#      command: node express_app/server.js
+#
+#  drug_scraper_puppeteer_8:
+#      container_name: drug_scraper_puppeteer-local-8
+#      build:
+#        context: ./docker/puppeteer
+#      volumes:
+#        - ./:/var/www/
+#      working_dir: /var/www/
+#      depends_on:
+#        - mysql
+#      links:
+#        - mysql
+#      tty: true
+#      expose:
+#        - 3000
+#      command: node express_app/server.js
+#
+#  drug_scraper_puppeteer_9:
+#      container_name: drug_scraper_puppeteer-local-9
+#      build:
+#        context: ./docker/puppeteer
+#      volumes:
+#        - ./:/var/www/
+#      working_dir: /var/www/
+#      depends_on:
+#        - mysql
+#      links:
+#        - mysql
+#      tty: true
+#      expose:
+#        - 3000
+#      command: node express_app/server.js
+#
+#  drug_scraper_puppeteer_10:
+#      container_name: drug_scraper_puppeteer-local-10
+#      build:
+#        context: ./docker/puppeteer
+#      volumes:
+#        - ./:/var/www/
+#      working_dir: /var/www/
+#      depends_on:
+#        - mysql
+#      links:
+#        - mysql
+#      tty: true
+#      expose:
+#        - 3000
+#      command: node express_app/server.js
 
 #  drug_scraper_node:
 #    container_name: drug_scraper_node-local
@@ -46,8 +192,11 @@ services:
       - mysql
     links:
       - mysql
-    expose:
-      - 9515
+    ports:
+      - "8989:8000"
+
+#    expose:
+#      - 9515
 
   ###############################################################################
   # Drug Scraper: MySql

@@ -2,20 +2,24 @@ const cheerio = require('cheerio')
 const _ = require('lodash');
 const {checkIfPageIsBlocked, getDrugUrl} = require('./utils')
 const writeHtmlToFile = require('../utils/WriteHtmlToFile')
+const loadPageFromFile = require('../utils/LoadPageFromFile')
 const PuppeteerService = require('../http/PuppeteerService')
 
 module.exports = async (drugFromDB) => {
+  console.log('start ScrapeDrugID')
   const puppeteer = await PuppeteerService.init()
   const browser = puppeteer.browser
   const page = puppeteer.page
 
   try {
+    // const pageToLoad = 'ScrapeDrugId_success.html'
+    // await loadPageFromFile(page, __dirname + `/storage/${pageToLoad}`)
+    // console.log(`Scraping saved page - ${pageToLoad}`)
+
     let uri = getDrugUrl(drugFromDB);
-    console.log(uri)
+    console.log(`Scraping ${uri}`)
     await page.goto(uri);
 
-    //https://www.goodrx.com/acarbose?&dosage=100mg&form=tablet&drug-name=ACARBOSE&quantity=90
-    //https://www.goodrx.com/acarbose?dosage=100mg&form=tablet&label_override=Precose&quantity=90
 
     const pageIsBlocked = await checkIfPageIsBlocked(page, browser)
 
@@ -29,8 +33,8 @@ module.exports = async (drugFromDB) => {
     }
 
     const pageHtml = await page.evaluate(() => document.querySelector('html').outerHTML);
-
-    await writeHtmlToFile(page, __dirname+'/storage/good_page.html')
+    console.log('Successfully requested ' + uri)
+    // await writeHtmlToFile(page, __dirname+'/storage/ScrapeDrugId_success.html')
     await browser.close();
 
     const domParser = cheerio.load(pageHtml);
@@ -63,8 +67,8 @@ module.exports = async (drugFromDB) => {
 
   }
   catch (e) {
-    await page.screenshot({path: __dirname + '/storage/to_long.png'});
-    await writeHtmlToFile(page, __dirname+'/storage/to_long.html')
+    // await page.screenshot({path: __dirname + '/storage/to_long.png'});
+    // await writeHtmlToFile(page, __dirname+'/storage/to_long.html')
     await browser.close();
     return {
       type: 'error',

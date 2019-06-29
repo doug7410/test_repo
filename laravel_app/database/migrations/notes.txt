@@ -1,0 +1,1 @@
+Need at add - drug_pull_id (int) 20 -  to goodrx_mar_08

@@ -3,6 +3,12 @@ const ScrapeGoodRxApi = require('../GoodRx/ScrapeApi')
 const ScrapeCoupon = require('../GoodRx/ScrapeCoupon')
 
 module.exports = {
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<void>}
+   */
   async scrapeDrugId(req, res) {
     res.setHeader('Content-Type', 'application/json');
     try {
@@ -14,10 +20,17 @@ module.exports = {
         res.send({error: JSON.stringify(response.error)})
       }
     } catch (error) {
-      res.send(JSON.stringify({error}))
+      res.status(500)
+      res.send(error)
     }
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<void>}
+   */
   async scrapeApi(req, res) {
     const {
       drugId,
@@ -40,10 +53,11 @@ module.exports = {
         DrugNDC: req.body.DrugNDC,
         NDC: req.body.NDC,
         DrugBrandGenericFlag: req.body.DrugBrandGenericFlag,
+        goodrx_id: req.body.goodrx_id
     }
 
     try {
-      const response = await ScrapeGoodRxApi(drugId, zipcode, drugFromDb)
+      const response = await ScrapeGoodRxApi(zipcode, drugFromDb)
       res.send(response)
 
     } catch (e) {
@@ -51,6 +65,12 @@ module.exports = {
     }
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<void>}
+   */
   async scrapeCouponPage(req, res) {
 
     try {

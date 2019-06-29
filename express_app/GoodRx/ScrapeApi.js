@@ -5,7 +5,7 @@ const PuppeteerService = require('../http/PuppeteerService')
 const currentTimeStamp = require('../utils/CurrentTimeStamp')
 const { targetedPharmacies, coordinatesByZipcode } = require('./config')
 
-module.exports = async (goodrxDrugId, zipcode, drugFromDB) => {
+module.exports = async (zipcode, drugFromDB) => {
   console.log('scraping API')
 
   if(!coordinatesByZipcode[zipcode]) {
@@ -21,23 +21,26 @@ module.exports = async (goodrxDrugId, zipcode, drugFromDB) => {
 
   const coordinates = coordinatesByZipcode[zipcode]
 
-  const priceRetrievalUrl = `https://www.goodrx.com/api/v4/drugs/${goodrxDrugId}/prices`
+  const priceRetrievalUrl = `https://www.goodrx.com/api/v4/drugs/${drugFromDB.goodrx_id}/prices`
     + `?location=${coordinates.latitude},${coordinates.longitude}`
     + `&location_type=LAT_LNG`
-    + `&quantity=30`;
+    + `&quantity=${drugFromDB.goodrx_qty}`;
 
   try {
     // for testing
     // await loadPageFromFile(page, __dirname + '/storage/scrape_api_good_page.html')
 
     // for real request
+    console.log('requesting ' + priceRetrievalUrl)
     await page.goto(priceRetrievalUrl);
+    console.log('successfully got page')
 
     const data = await page.evaluate(() => {
       return JSON.parse(document.querySelector("body").innerText);
     });
 
     if(data.error) {
+      console.log('error getting page')
       console.log(data.error)
       return {
         type: 'error',
@@ -93,6 +96,8 @@ module.exports = async (goodrxDrugId, zipcode, drugFromDB) => {
 
   } catch (e) {
     await browser.close();
+    console.log('error scraping ' + priceRetrievalUrl)
+    console.log(e)
     return {
       type: 'error',
       message: e

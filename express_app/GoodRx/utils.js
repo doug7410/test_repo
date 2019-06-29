@@ -9,12 +9,14 @@ module.exports = {
     ]
 
     if (body.includes(blockedText[0])) {
-      await writeHtmlToFile(page, __dirname+'/storage/blocked_for_automation.html')
+      // await writeHtmlToFile(page, __dirname+'/storage/blocked_for_automation.html')
+      console.log(`Blocked: ${blockedText[0]}`)
       return `Blocked: ${blockedText[0]}`
     }
 
     if (body.includes(blockedText[1])) {
-      await writeHtmlToFile(page, __dirname+'/storage/blocked_for_out_of_us.html')
+      // await writeHtmlToFile(page, __dirname+'/storage/blocked_for_out_of_us.html')
+      console.log(`Blocked: ${blockedText[0]}`)
       return `Blocked: ${blockedText[1]}`
     }
 

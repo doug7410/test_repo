@@ -22,13 +22,15 @@ RUN /docker/build.sh
 RUN apt-get update
 
 # For development
-RUN apt-get install git -y
+RUN apt-get install git -y && \
+    apt-get install vim -y
 
 # For Laravel
 RUN apt-get install php-mbstring -y && \
     apt-get install php-xml -y && \
     apt-get install php7.3-zip -y  && \
-    apt-get install php7.3-curl
+    apt-get install php7.3-curl -y && \
+    apt-get install php7.3-fpm -y
 
 # PHP mySql
 RUN apt-get install php-mysql -y
