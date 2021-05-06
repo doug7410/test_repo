@@ -38,7 +38,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "tough-cookie": "^3.0.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
